@@ -1,1 +1,0 @@
-# hritikmehta.github.io
