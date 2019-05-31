@@ -1,0 +1,115 @@
+html {
+  box-sizing: border-box;
+font-family: Arial, Helvetica, sans-serif;
+}
+*{
+	margin:0;
+	padding:0;
+}
+
+	.wrapper {
+  display: grid;
+  grid-gap: 20px;
+  background-color:#ddd;
+}
+	
+.toplinks ul{
+	list-style-type:none;
+	float:right;
+	margin-top:28px;
+	
+}
+ .toplinks ul li {
+       display: inline-block;
+ }
+	.toplinks ul li a
+	{
+     text-decoration:none;
+	 font-size:20px;
+	 color: black;
+	 border: 1px solid transparent;
+	 padding: 5px 28px;
+	
+	
+	}
+	.toplinks ul li a:hover {
+  background: #fff;
+  color: #aaa;
+	}
+	
+	
+	
+	
+ .container{
+  display: grid;
+    grid-gap:2rem;
+	grid-template-column:repeat(3,1fr);
+    grid-template-area:
+   'g p p'
+   's p p'
+   't t f'
+   'w a f';
+   
+   
+   /* background-size: cover;
+  background-position: center;*/
+	
+	
+}	
+	.container > div{
+      background-color:cadetblue;
+   
+    }
+    .container > div:nth-child(odd){
+	background-color:black;
+	 padding:4em;}
+	
+	.writting
+	{
+		grid-area:w;
+		min-height: 400px;
+		color:#112233
+		
+	}
+	
+	.guitar
+	{
+	background: url("");	
+	grid-area:g;	
+	min-height: 400px;
+	}
+	
+	.photography
+	{background: url("");
+	grid-area: p;
+		 
+ }
+	
+	.awake
+	{
+		background: url("");
+	grid-area:a;
+	
+	}
+	
+	.foody
+	{
+		background: url("");
+		grid-area:f;
+		min-height: 400px;
+		
+	}
+	
+	.travelling
+	{
+		background: url("");
+	grid-area:t;	
+	min-height: 400px;
+	}
+	
+	.swimming
+	{
+		background: url("");
+		grid-area:s;
+		min-height: 400px;
+	}
