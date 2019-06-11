@@ -1,0 +1,114 @@
+*{
+	margin:0;
+	padding:0;
+	font-family: century gothic;
+	
+}
+body{
+	background: linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.3) ),url(../aboutme.jpg) no-repeat fixed;
+	height:100vh;
+	background-position:center;
+	background-size:cover;
+	
+}
+.toplinks ul{
+	list-style-type:none;
+	float:right;
+	margin-top:28px;
+	
+}
+ .toplinks ul li {
+       display: inline-block;
+ }
+	.toplinks ul li a{
+     text-decoration:none;
+	 font-size:20px;
+	 color: black;
+	 border: 1px solid transparent;
+	 padding: 5px 28px;
+	
+	 
+ }
+ 
+ /*ul li.active a {
+	 background-color: white;
+ }*/
+ 
+ .toplinks ul li a:hover{
+	    background-color: #ddd;
+		font-weight:bold;
+ }		
+		
+		
+section{
+	position:absolute;
+	top:15%;
+	left:10%;
+	width:88%;
+}
+
+	
+.container > .paraL, .paraR{
+	font-color:#ddd;
+	/*position:absolute;
+	border: 2px solid black;*/
+	height:100px;
+	width:70%;
+	background:rgba(104, 104, 104, 0.8);
+	
+}		
+
+.container > div.paraR > img {
+	float:left;
+	display:inline;
+	height:150px;
+	width:140 px;	
+	position:relative;
+	top:-30px;
+	padding-right:10px;
+}
+.container > div.paraR{
+	text-align:left;
+}
+
+
+.container > div.paraL{
+	position:relative;
+    left:20%;
+	text-align:right;
+	
+	
+	
+}
+
+.container > div.paraL > img {
+	float:right;
+	display:inline;
+	height:150px;
+	width:200px;	
+	position:relative;
+	top:-30px;
+	padding-left:10px;
+}
+
+.main{
+	position: relative;
+	left:10%;
+	width:70%;
+}
+
+.container>.main > h1{
+    color:rgba(151,11,33,0.3);
+	background:transparent;
+    position:relative;
+	font-size:55px;
+	margin-left:2rem;;
+}
+
+.container> .main > .grid{
+	display: grid;
+    grid-gap: 30px;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 3rem;
+    background:rgba(104, 104, 104, 0.8);
+}
