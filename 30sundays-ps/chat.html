@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Trip Assistant — 30 Sundays</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink:        #FD014F;
+      --pink-mid:    #ff4d7d;
+      --pink-bg:     #fff0f4;
+      --pink-border: rgba(253,1,79,0.15);
+      --cream:       #fff6e6;
+      --cream-warm:  #fdf0dc;
+      --cream-deep:  #f5e6cc;
+      --grey-bg:     #f4f4f4;
+      --grey-text:   #aaaaaa;
+      --dark:        #1c1c1e;
+      --mid:         #555;
+      --white:       #ffffff;
+      --green:       #27ae60;
+      --green-bg:    #edfff5;
+      --green-brd:   #b0e0c0;
+      --radius:      14px;
+      --radius-sm:   10px;
+      --shadow-card: 0 2px 12px rgba(0,0,0,0.05);
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #e2d8cc;
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 390px;
+      min-height: 100vh;
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── TOP NAV ── */
+    .top-nav {
+      position: fixed;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 390px;
+      z-index: 100;
+      background: rgba(253, 243, 224, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(253,1,79,0.08);
+      padding: 12px 16px 10px;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .nav-back {
+      width: 36px; height: 36px; background: none; border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; border-radius: 50%; flex-shrink: 0; color: var(--pink);
+    }
+    .nav-back:active { background: var(--pink-bg); }
+
+    .nav-info { flex: 1; min-width: 0; }
+    .nav-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px; font-weight: 700; color: var(--dark);
+    }
+    .nav-sub { font-size: 10px; color: var(--grey-text); margin-top: 1px; }
+
+    .status-badge {
+      display: flex; align-items: center; gap: 5px;
+      border-radius: 20px; padding: 4px 10px; flex-shrink: 0;
+      transition: all 0.3s;
+    }
+    .status-badge.online { background: var(--green-bg); border: 1px solid var(--green-brd); }
+    .status-badge.thinking { background: #fff8e6; border: 1px solid #f9d77e; }
+    .status-badge.escalate { background: var(--pink-bg); border: 1px solid var(--pink-border); }
+
+    .s-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      transition: background 0.3s;
+    }
+    .status-badge.online .s-dot   { background: var(--green); }
+    .status-badge.thinking .s-dot { background: #f39c12; animation: blink 1s infinite; }
+    .status-badge.escalate .s-dot { background: var(--pink); }
+
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+    .s-label {
+      font-size: 10px; font-weight: 700;
+      transition: color 0.3s;
+    }
+    .status-badge.online .s-label   { color: var(--green); }
+    .status-badge.thinking .s-label { color: #b07a00; }
+    .status-badge.escalate .s-label { color: var(--pink); }
+
+    /* ── SCROLL AREA ── */
+    .chat-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 74px 0 148px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* context banner */
+    .ctx-banner {
+      margin: 0 14px 4px;
+      background: linear-gradient(135deg, var(--cream-warm), var(--cream-deep));
+      border: 1px solid var(--pink-border);
+      border-radius: var(--radius);
+      padding: 11px 13px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .ctx-icon {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: var(--pink-bg); border: 1px solid var(--pink-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; flex-shrink: 0;
+    }
+    .ctx-text { flex: 1; min-width: 0; }
+    .ctx-route { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; color:var(--dark); }
+    .ctx-meta  { font-size:10px; color:var(--grey-text); margin-top:1px; }
+
+    /* date divider */
+    .date-div {
+      text-align:center; margin:14px 0 8px;
+      font-size:10px; color:var(--grey-text); font-weight:500;
+      letter-spacing:0.5px; text-transform:uppercase;
+    }
+
+    /* messages */
+    .msg-row {
+      display:flex; padding:3px 14px; gap:8px;
+      animation: fadeUp 0.2s ease both;
+    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+    .msg-row.user { justify-content:flex-end; }
+    .msg-row.bot  { justify-content:flex-start; }
+
+    .bot-av {
+      width:28px; height:28px; border-radius:50%;
+      background:var(--pink); display:flex; align-items:center;
+      justify-content:center; flex-shrink:0; margin-top:2px; font-size:12px;
+    }
+
+    .bubble {
+      max-width:80%; padding:10px 13px; border-radius:18px;
+      font-size:13.5px; line-height:1.5;
+    }
+    .bubble.user {
+      background:var(--pink); color:white;
+      border-bottom-right-radius:5px;
+    }
+    .bubble.bot {
+      background:var(--white); color:var(--dark);
+      border:1px solid rgba(0,0,0,0.06);
+      border-bottom-left-radius:5px;
+      box-shadow:var(--shadow-card);
+    }
+
+    /* typing indicator */
+    .typing {
+      background:var(--white); border:1px solid rgba(0,0,0,0.06);
+      border-radius:18px; border-bottom-left-radius:5px;
+      padding:12px 16px; display:flex; gap:5px; align-items:center;
+      box-shadow:var(--shadow-card);
+    }
+    .typing span {
+      width:7px; height:7px; border-radius:50%;
+      background:var(--grey-text); display:block;
+      animation:bounce 1.2s infinite;
+    }
+    .typing span:nth-child(2){animation-delay:.2s}
+    .typing span:nth-child(3){animation-delay:.4s}
+    @keyframes bounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}}
+
+    /* rich content inside bubbles */
+    .bubble .bubble-list { list-style:none; margin-top:8px; }
+    .bubble .bubble-list li {
+      display:flex; align-items:flex-start; gap:7px;
+      margin-bottom:6px; font-size:13px; line-height:1.45;
+    }
+    .bubble .bubble-list li::before {
+      content:'✓'; color:var(--green); font-size:11px;
+      font-weight:700; flex-shrink:0; margin-top:2px;
+    }
+
+    .bubble .tip-card {
+      margin-top:10px; padding:10px 12px;
+      background:var(--pink-bg);
+      border:1px solid var(--pink-border);
+      border-radius:10px;
+    }
+    .bubble .tip-label {
+      font-size:10px; font-weight:700; color:var(--pink);
+      text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;
+    }
+    .bubble .tip-text { font-size:12px; color:var(--mid); line-height:1.45; }
+
+    .bubble .escalate-card {
+      margin-top:10px; padding:12px;
+      background:var(--pink-bg);
+      border:1px solid var(--pink-border);
+      border-radius:10px; text-align:center;
+    }
+    .bubble .escalate-card p {
+      font-size:12px; color:var(--mid); margin-bottom:10px; line-height:1.4;
+    }
+    .bubble .escalate-card button {
+      background:var(--pink); color:#fff; border:none;
+      border-radius:20px; padding:8px 20px;
+      font-size:12px; font-weight:600; font-family:'Poppins',sans-serif;
+      cursor:pointer; display:block; margin:0 auto;
+    }
+    .bubble .escalate-card button:active{opacity:.85}
+
+    /* ── SOFT ESCALATE CTA ── */
+    .bubble .escalate-soft-card { margin-top:12px; }
+    .escalate-cta-btn {
+      display:block; width:100%; padding:11px 16px;
+      background:var(--pink); color:#fff; border:none;
+      border-radius:10px; font-size:13px; font-weight:700;
+      font-family:'Poppins',sans-serif; cursor:pointer;
+      text-align:center; transition:opacity .15s;
+    }
+    .escalate-cta-btn:hover { opacity:.88; }
+    .escalate-cta-btn:disabled { opacity:.38; cursor:default; }
+
+    /* ── ESCALATE CONFIRM ── */
+    .escalate-confirm {
+      display:flex; gap:12px; align-items:flex-start;
+      padding:14px; background:var(--green-bg);
+      border:1px solid var(--green-brd); border-radius:10px;
+    }
+    .ec-check {
+      width:24px; height:24px; border-radius:50%;
+      background:var(--green); color:#fff;
+      display:flex; align-items:center; justify-content:center;
+      font-size:12px; font-weight:700; flex-shrink:0; margin-top:1px;
+    }
+    .ec-title { font-size:13px; font-weight:700; color:#1a5e35; margin-bottom:3px; }
+    .ec-body  { font-size:12px; color:#2d7a4f; line-height:1.55; }
+    .ec-wait  { font-size:11px; font-weight:700; color:var(--green); margin-top:6px; }
+
+    /* route tag */
+    .route-tag {
+      display:inline-flex; align-items:center; gap:5px;
+      background:var(--grey-bg); border-radius:10px;
+      padding:3px 8px; font-size:10px; color:var(--grey-text);
+      margin-top:7px;
+    }
+    .route-tag.groq   { background:#fffbe6; color:#a07000; }
+    .route-tag.gemini { background:#e8f5e9; color:#2e7d32; }
+    .route-tag.claude { background:#f0eeff; color:#5b3fa0; }
+
+    /* error bubble */
+    .bubble.error {
+      background:#fff0ef; border:1px solid #f9c0bc; color:#c0392b;
+    }
+
+    /* ── QUICK REPLIES ── */
+    .quick-wrap {
+      padding:8px 14px 0;
+      display:flex; flex-wrap:wrap; gap:7px;
+    }
+    .q-chip {
+      background:var(--white);
+      border:1.5px solid var(--pink-border);
+      border-radius:20px; padding:6px 13px;
+      font-family:'Poppins',sans-serif;
+      font-size:12px; font-weight:500; color:var(--pink);
+      cursor:pointer; white-space:nowrap;
+      transition:background .15s,border-color .15s;
+    }
+    .q-chip:active,.q-chip:hover{background:var(--pink-bg);border-color:var(--pink)}
+
+    /* ── EXEC CONNECT ── */
+    .exec-connect {
+      display:none;
+      align-items:center; justify-content:center; gap:9px;
+      padding:9px 16px;
+      background:var(--white);
+      border-top:1px solid rgba(0,0,0,0.06);
+      border-bottom:1px solid rgba(0,0,0,0.04);
+      font-size:12px; color:var(--grey-text);
+    }
+    .exec-connect-btn {
+      font-size:11px; font-weight:600; color:var(--mid);
+      background:none; border:1px solid rgba(0,0,0,0.14);
+      border-radius:20px; padding:5px 13px;
+      cursor:pointer; font-family:'Poppins',sans-serif;
+      transition:border-color .15s, color .15s;
+    }
+    .exec-connect-btn:hover { border-color:var(--pink); color:var(--pink); }
+
+    /* ── INPUT BAR ── */
+    .input-bar {
+      position:fixed;
+      bottom:0; left:50%; transform:translateX(-50%);
+      width:100%; max-width:390px;
+      z-index:100;
+      background:rgba(253,243,224,.96);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      border-top:1px solid rgba(253,1,79,.08);
+      padding:10px 14px 26px;
+    }
+
+    .input-row {
+      display:flex; align-items:flex-end; gap:9px;
+      margin-top:10px;
+    }
+
+    .input-field {
+      flex:1; background:var(--white);
+      border:1.5px solid rgba(0,0,0,.09);
+      border-radius:22px; padding:10px 16px;
+      font-family:'Poppins',sans-serif;
+      font-size:13.5px; color:var(--dark);
+      resize:none; outline:none;
+      min-height:42px; max-height:100px;
+      line-height:1.4;
+      transition:border-color .15s;
+    }
+    .input-field::placeholder{color:var(--grey-text)}
+    .input-field:focus{border-color:var(--pink-mid)}
+
+    .send-btn {
+      width:42px; height:42px; border-radius:50%;
+      background:var(--pink); border:none;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; flex-shrink:0;
+      transition:transform .12s,opacity .12s;
+    }
+    .send-btn:active{transform:scale(.92)}
+    .send-btn:disabled{opacity:.45;cursor:default}
+    .send-btn svg{color:white}
+
+    .hidden{display:none!important}
+  </style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- ── TOP NAV ── -->
+  <div class="top-nav">
+    <button class="nav-back" onclick="goBack()" aria-label="Back">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+    </button>
+    <div class="nav-info">
+      <div class="nav-title">Trip Assistant</div>
+      <div class="nav-sub" id="nav-sub">Loading…</div>
+    </div>
+    <div class="status-badge online" id="status-badge">
+      <div class="s-dot"></div>
+      <span class="s-label" id="status-label">Online</span>
+    </div>
+  </div>
+
+  <!-- ── SCROLL AREA ── -->
+  <div class="chat-scroll" id="chat-scroll">
+
+    <div class="ctx-banner" id="ctx-banner" style="display:none">
+      <div class="ctx-icon" id="ctx-icon">✈️</div>
+      <div class="ctx-text">
+        <div class="ctx-route" id="ctx-route"></div>
+        <div class="ctx-meta"  id="ctx-meta"></div>
+      </div>
+    </div>
+
+    <div class="date-div">Today</div>
+    <div id="messages"></div>
+
+  </div>
+
+  <!-- ── EXEC CONNECT (shown after 1st follow-up) ── -->
+  <div class="exec-connect" id="exec-connect">
+    <span>Still have questions?</span>
+    <button class="exec-connect-btn" onclick="simulateEscalate(false)">Talk to an executive</button>
+  </div>
+
+  <!-- ── INPUT BAR ── -->
+  <div class="input-bar">
+    <div class="quick-wrap" id="quick-wrap"></div>
+    <div class="input-row">
+      <textarea
+        class="input-field"
+        id="input-field"
+        placeholder="Ask anything about your trip…"
+        rows="1"
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"
+      ></textarea>
+      <button class="send-btn" id="send-btn" onclick="sendMessage()" aria-label="Send" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script src="trips-data.js"></script>
+<script>
+// ── API base (absolute URL when served outside Vercel e.g. GitHub Pages) ──
+const API_BASE = (() => {
+  const h = window.location.hostname;
+  if (h === 'localhost' || h === '127.0.0.1' || h.endsWith('.vercel.app')) return '';
+  return 'https://30sundays-ps.vercel.app';
+})();
+
+// ── State ──────────────────────────────────────────────────────────────────
+let trip = null;
+let isBusy = false;
+let conversationHistory = [];
+
+// ── Init ───────────────────────────────────────────────────────────────────
+(function init() {
+  const params = new URLSearchParams(location.search);
+  const tripId = params.get('trip') || 'bali';
+  const seedQ  = params.get('q');
+
+  trip = TRIPS[tripId];
+  if (!trip) {
+    appendMsg('bot', 'Trip not found. <a href="index.html">Go back</a>', '', '');
+    return;
+  }
+
+  // Update UI
+  document.title = `${trip.destination} Assistant · 30 Sundays`;
+  document.getElementById('nav-sub').textContent = `${trip.destination} · ${trip.daysLeft > 0 ? trip.daysLeft + ' days to go' : 'On trip!'}`;
+
+  const banner = document.getElementById('ctx-banner');
+  banner.style.display = '';
+  document.getElementById('ctx-icon').textContent = trip.emoji;
+  document.getElementById('ctx-route').textContent = trip.route;
+  document.getElementById('ctx-meta').textContent =
+    `${trip.couple.name1} & ${trip.couple.name2} · ${trip.dates} · ${trip.bookingId}`;
+
+  // Welcome message
+  const welcome = trip.chat;
+  appendMsg('bot',
+    `${welcome.welcome}<div class="tip-card"><div class="tip-label">${welcome.tipLabel}</div><div class="tip-text">${welcome.tipText}</div></div>`,
+    '', '');
+
+  // Quick replies
+  renderQuickReplies(welcome.quickReplies);
+
+  // Enable send btn
+  document.getElementById('send-btn').disabled = false;
+
+  // Seed from URL ?q=
+  if (seedQ) {
+    const shortcodes = {
+      packing:  `What should I pack for ${trip.destination}?`,
+      checkin:  'How do I check in for my flight?',
+      currency: 'What currency should I carry?',
+      visa:     `Do I need a visa for ${trip.destination}?`,
+      hotel:    'Tell me about my hotel',
+      tips:     `Give me local tips for ${trip.destination}`,
+      airport:  'What documents do I need to carry to the airport?'
+    };
+    const text = shortcodes[seedQ] || decodeURIComponent(seedQ);
+    setTimeout(() => { sendText(text); }, 700);
+  }
+})();
+
+// ── Quick replies ──────────────────────────────────────────────────────────
+function renderQuickReplies(chips) {
+  const wrap = document.getElementById('quick-wrap');
+  wrap.innerHTML = '';
+  chips.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'q-chip';
+    btn.textContent = c;
+    // strip emoji for API
+    btn.onclick = () => sendText(c.replace(/^[^\w]+/, '').trim() || c);
+    wrap.appendChild(btn);
+  });
+}
+
+// ── Send ───────────────────────────────────────────────────────────────────
+function sendMessage() {
+  const field = document.getElementById('input-field');
+  const text = field.value.trim();
+  if (!text || isBusy) return;
+  field.value = ''; field.style.height = 'auto';
+  sendText(text);
+}
+
+function sendText(text) {
+  if (isBusy) return;
+  isBusy = true;
+  document.getElementById('send-btn').disabled = true;
+  document.getElementById('quick-wrap').classList.add('hidden');
+
+  appendMsg('user', escHtml(text), '', '');
+  conversationHistory.push({ role: 'user', content: text });
+
+  setStatus('thinking');
+  const typingEl = showTyping();
+
+  fetch(`${API_BASE}/api/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      tripId: trip.id,
+      message: text,
+      history: conversationHistory.slice(-8)
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    typingEl.remove();
+    if (data.error) {
+      appendMsg('bot', `⚠️ ${data.error}`, 'error', '');
+    } else {
+      const routeTag = data.route === 'groq'
+        ? `<div class="route-tag groq">⚡ ${data.model}</div>`
+        : data.route === 'gemini'
+        ? `<div class="route-tag gemini">✦ ${data.model}</div>`
+        : data.route === 'claude'
+        ? `<div class="route-tag claude">✦ ${data.model}</div>`
+        : '';
+      appendMsg('bot', data.html + routeTag, '', data.route);
+      conversationHistory.push({ role: 'assistant', content: data.html });
+    }
+    setStatus('online');
+    isBusy = false;
+    document.getElementById('send-btn').disabled = false;
+    showFollowUps(text, data.route);
+    // Show exec connect after user's 1st message
+    const userCount = conversationHistory.filter(m => m.role === 'user').length;
+    if (userCount >= 1) {
+      document.getElementById('exec-connect').style.display = 'flex';
+    }
+  })
+  .catch(err => {
+    typingEl.remove();
+    appendMsg('bot', `⚠️ Network error — check your connection and try again.`, 'error', '');
+    setStatus('online');
+    isBusy = false;
+    document.getElementById('send-btn').disabled = false;
+  });
+}
+
+// ── Follow-up suggestions ──────────────────────────────────────────────────
+function showFollowUps(query, route) {
+  if (route === 'escalate') return;
+  const t = query.toLowerCase();
+  let chips = [];
+
+  if (/pack|bag|luggage|cloth/.test(t)) chips = ['How do I check in?', 'What currency should I carry?'];
+  else if (/check.?in|board|flight/.test(t)) chips = ['What time to reach airport?', 'What documents to carry?'];
+  else if (/currency|money|cash/.test(t)) chips = ['Any local tips?', 'What to do on Day 1?'];
+  else if (/visa|passport/.test(t)) chips = ['What documents to carry?', 'How long does immigration take?'];
+  else if (/hotel|stay|check.?out/.test(t)) chips = ['How to get from airport?', 'Activities nearby?'];
+  else if (/tip|recommend|local|restaurant/.test(t)) chips = ['Best places on free day?', 'What to pack?'];
+  else chips = ['What should I pack?', 'Local tips for ' + trip.destination];
+
+  if (chips.length) {
+    document.getElementById('quick-wrap').classList.remove('hidden');
+    renderQuickReplies(chips);
+  }
+}
+
+// ── DOM helpers ────────────────────────────────────────────────────────────
+function appendMsg(type, html, extraClass, route) {
+  const messages = document.getElementById('messages');
+  const row = document.createElement('div');
+  row.className = `msg-row ${type}`;
+
+  if (type === 'bot') {
+    row.innerHTML = `
+      <div class="bot-av">✦</div>
+      <div class="bubble bot${extraClass ? ' '+extraClass : ''}">${html}</div>`;
+  } else {
+    row.innerHTML = `<div class="bubble user">${html}</div>`;
+  }
+
+  messages.appendChild(row);
+  scrollBottom();
+  return row;
+}
+
+function showTyping() {
+  const messages = document.getElementById('messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row bot';
+  row.id = 'typing-row';
+  row.innerHTML = `<div class="bot-av">✦</div><div class="typing"><span></span><span></span><span></span></div>`;
+  messages.appendChild(row);
+  scrollBottom();
+  return row;
+}
+
+function scrollBottom() {
+  const el = document.getElementById('chat-scroll');
+  requestAnimationFrame(() => { el.scrollTop = el.scrollHeight; });
+}
+
+function setStatus(state) {
+  const badge = document.getElementById('status-badge');
+  const label = document.getElementById('status-label');
+  badge.className = 'status-badge ' + state;
+  label.textContent = state === 'thinking' ? 'Thinking…'
+                    : state === 'escalate' ? 'Escalating'
+                    : 'Online';
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function goBack() {
+  const ref = document.referrer;
+  if (ref && ref.includes('checklist')) history.back();
+  else window.location.href = `checklist.html?trip=${trip ? trip.id : ''}`;
+}
+
+// ── Escalation ────────────────────────────────────────────────────────────
+let escalateRequested = false;
+
+function escalateRequest() {
+  if (escalateRequested) return;
+  escalateRequested = true;
+
+  // Disable all CTA buttons immediately
+  document.querySelectorAll('.escalate-cta-btn').forEach(b => {
+    b.disabled = true;
+    b.textContent = 'Connecting…';
+  });
+
+  // Hide the persistent exec-connect bar too
+  const bar = document.getElementById('exec-connect');
+  if (bar) bar.style.display = 'none';
+
+  setTimeout(() => {
+    appendMsg('bot', `
+      <div class="escalate-confirm">
+        <div class="ec-check">✓</div>
+        <div>
+          <div class="ec-title">Request sent</div>
+          <div class="ec-body">We're arranging a 30 Sundays executive for your query on priority.</div>
+          <div class="ec-wait">Avg wait time: 5 min</div>
+        </div>
+      </div>`, '', '');
+    scrollBottom();
+  }, 700);
+}
+
+function simulateEscalate(urgent) {
+  if (urgent) {
+    alert('Connecting to emergency line: +91 98765 43210\n\n(Demo mode — in production this dials the 24/7 emergency line)');
+  } else {
+    escalateRequest();
+  }
+}
+</script>
+</body>
+</html>
