@@ -437,6 +437,13 @@
 
 <script src="trips-data.js"></script>
 <script>
+// ── Auth guard ─────────────────────────────────────────────────────────────
+if (sessionStorage.getItem('30s_auth') !== '1') {
+  const dest = encodeURIComponent(location.href);
+  location.replace('index.html?next=' + dest);
+}
+</script>
+<script>
 // ── API base (absolute URL when served outside Vercel e.g. GitHub Pages) ──
 const API_BASE = (() => {
   const h = window.location.hostname;

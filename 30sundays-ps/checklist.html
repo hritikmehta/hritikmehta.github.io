@@ -418,6 +418,13 @@
 
 <script src="trips-data.js"></script>
 <script>
+// ── Auth guard ─────────────────────────────────────────────────────────────
+if (sessionStorage.getItem('30s_auth') !== '1') {
+  const dest = encodeURIComponent(location.href);
+  location.replace('index.html?next=' + dest);
+}
+</script>
+<script>
 // ── Load trip from URL param ───────────────────────────────────────────────
 const tripId = new URLSearchParams(location.search).get('trip') || 'bali';
 const trip = TRIPS[tripId];

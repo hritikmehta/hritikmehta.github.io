@@ -508,6 +508,8 @@ function doLogin() {
   const p = document.getElementById('l-pass').value;
   if (CREDS.some(c => c.u === u && c.p === p)) {
     sessionStorage.setItem(AUTH_KEY, '1');
+    const next = new URLSearchParams(location.search).get('next');
+    if (next) { location.href = decodeURIComponent(next); return; }
     document.getElementById('login-overlay').style.display = 'none';
   } else {
     const card = document.getElementById('login-card');
