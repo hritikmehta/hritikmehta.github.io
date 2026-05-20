@@ -270,18 +270,31 @@
     /* ── QUICK REPLIES ── */
     .quick-wrap {
       padding:8px 14px 0;
-      display:flex; flex-wrap:wrap; gap:7px;
+      display:flex; gap:7px;
+      overflow-x:auto; -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
     }
+    .quick-wrap::-webkit-scrollbar { display:none; }
     .q-chip {
       background:var(--white);
       border:1.5px solid var(--pink-border);
       border-radius:20px; padding:6px 13px;
       font-family:'Poppins',sans-serif;
       font-size:12px; font-weight:500; color:var(--pink);
-      cursor:pointer; white-space:nowrap;
+      cursor:pointer; white-space:nowrap; flex-shrink:0;
       transition:background .15s,border-color .15s;
     }
     .q-chip:active,.q-chip:hover{background:var(--pink-bg);border-color:var(--pink)}
+    .q-chip-callback {
+      background:none;
+      border:1.5px solid rgba(0,0,0,0.13);
+      border-radius:20px; padding:6px 13px;
+      font-family:'Poppins',sans-serif;
+      font-size:12px; font-weight:500; color:var(--mid);
+      cursor:pointer; white-space:nowrap; flex-shrink:0;
+      transition:background .15s,border-color .15s,color .15s;
+    }
+    .q-chip-callback:active,.q-chip-callback:hover{border-color:var(--pink);color:var(--pink);}
 
     /* ── EXEC CONNECT ── */
     .exec-connect {
@@ -486,10 +499,15 @@ function renderQuickReplies(chips) {
     const btn = document.createElement('button');
     btn.className = 'q-chip';
     btn.textContent = c;
-    // strip emoji for API
     btn.onclick = () => sendText(c.replace(/^[^\w]+/, '').trim() || c);
     wrap.appendChild(btn);
   });
+  // Callback pill always at the end of the scroll row
+  const cb = document.createElement('button');
+  cb.className = 'q-chip-callback';
+  cb.textContent = 'Request call back';
+  cb.onclick = () => escalateRequest();
+  wrap.appendChild(cb);
 }
 
 // ── Send ───────────────────────────────────────────────────────────────────
