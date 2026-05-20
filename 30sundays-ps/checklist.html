@@ -533,7 +533,12 @@ function goHome() {
 window.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     const anchor = document.getElementById('now-anchor');
-    if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const header = document.querySelector('.fixed-stack');
+    if (anchor) {
+      const headerH = header ? header.getBoundingClientRect().height : 152;
+      const top = anchor.getBoundingClientRect().top + window.scrollY - headerH - 8;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
   }, 350);
 });
 </script>
