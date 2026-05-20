@@ -358,32 +358,57 @@
 
     /* ── METRICS ── */
     .north-star {
-      background: var(--ink); border-radius: 20px; padding: 36px;
+      background: var(--ink); border-radius: 20px; padding: 28px 32px;
       margin-top: 36px; color: white;
+      display: flex; align-items: center; justify-content: space-between; gap: 32px;
     }
-    .ns-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--pink); margin-bottom: 10px; }
-    .ns-metric { font-family: 'Montserrat', sans-serif; font-size: 24px; font-weight: 900; line-height: 1.2; max-width: 640px; }
-    .ns-desc { font-size: 13px; color: rgba(255,255,255,0.55); margin-top: 10px; line-height: 1.65; max-width: 580px; }
-    .ns-target { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; padding: 6px 14px; background: rgba(253,1,79,0.2); border-radius: 20px; font-size: 12px; font-weight: 700; color: var(--pink); }
+    .ns-left { flex: 1; }
+    .ns-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--pink); margin-bottom: 8px; }
+    .ns-metric { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 900; line-height: 1.25; }
+    .ns-sub { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 6px; }
+    .ns-right { text-align: right; flex-shrink: 0; }
+    .ns-num-label { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 4px; }
+    .ns-baseline { font-family: 'Montserrat', sans-serif; font-size: 36px; font-weight: 900; color: rgba(255,255,255,0.25); line-height: 1; }
+    .ns-arrow { font-size: 18px; color: var(--pink); margin: 4px 0; }
+    .ns-target-num { font-family: 'Montserrat', sans-serif; font-size: 44px; font-weight: 900; color: var(--pink); line-height: 1; }
+    .ns-target-label { font-size: 10px; color: var(--pink); font-weight: 600; opacity: 0.8; margin-top: 2px; }
 
-    .metric-card { background: var(--white); border-radius: 16px; padding: 24px; }
-    .slide--white .metric-card { background: var(--warm); }
-    .metric-card-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--light); margin-bottom: 16px; }
-    .metric-item { margin-bottom: 14px; }
-    .metric-item:last-child { margin-bottom: 0; }
-    .metric-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
-    .metric-desc { font-size: 11px; color: var(--mid); line-height: 1.55; }
-    .metric-target { font-size: 10px; font-weight: 700; color: var(--pink); margin-top: 3px; }
+    /* Metric table */
+    .metrics-table { margin-top: 28px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; }
+    .mt-col { }
+    .mt-col-header {
+      padding: 14px 20px; background: var(--warm);
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--light);
+      border-bottom: 1px solid var(--rule);
+    }
+    .mt-col:not(:last-child) .mt-col-header { border-right: 1px solid var(--rule); }
+    .mt-col:not(:last-child) .mt-row { border-right: 1px solid var(--rule); }
+    .mt-row {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 12px; padding: 14px 20px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .mt-row:last-child { border-bottom: none; }
+    .mt-name { font-size: 12px; font-weight: 600; color: var(--ink); line-height: 1.4; }
+    .mt-hint { font-size: 10px; color: var(--light); font-weight: 400; display: block; margin-top: 1px; }
+    .mt-target {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px; font-weight: 900; color: var(--pink);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .mt-target.down { color: var(--ink); }
 
+    /* Pilot */
     .pilot-box {
-      margin-top: 32px; padding: 32px;
-      background: var(--white); border-radius: 16px;
+      margin-top: 24px; padding: 28px 32px;
+      background: var(--warm); border-radius: 16px;
     }
-    .slide:not(.slide--white) .pilot-box { background: var(--white); }
-    .pilot-box-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; }
-    .pilot-row { display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start; }
-    .pilot-num { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 900; color: var(--pink); width: 20px; flex-shrink: 0; margin-top: 2px; }
-    .pilot-text { font-size: 13px; color: var(--mid); line-height: 1.6; }
+    .pilot-box-title { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--light); margin-bottom: 16px; }
+    .pilot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 40px; }
+    .pilot-row { display: flex; gap: 12px; align-items: flex-start; }
+    .pilot-num { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 900; color: var(--pink); flex-shrink: 0; margin-top: 2px; }
+    .pilot-text { font-size: 12px; color: var(--mid); line-height: 1.55; }
     .pilot-text strong { color: var(--ink); }
 
     /* ── EVALS ── */
@@ -1410,92 +1435,96 @@
 
     <!-- North Star -->
     <div class="north-star">
-      <div class="ns-eyebrow">North Star Metric</div>
-      <div class="ns-metric">Executive escalation rate — % of trips where the user initiates contact with a human</div>
-      <div class="ns-desc">
-        If the checklist and chatbot are doing their job, most questions should never need a human. A high escalation rate means the AI is failing at something it should handle. A low rate means we're genuinely reducing anxiety — not just routing it.
+      <div class="ns-left">
+        <div class="ns-eyebrow">North Star Metric</div>
+        <div class="ns-metric">Executive escalation rate</div>
+        <div class="ns-sub">% of trips where the user initiates contact with a human — lower is better</div>
       </div>
-      <div class="ns-target">Target: &lt;15% · Current baseline: ~60%<sup class="fnref">6</sup> (estimated)</div>
+      <div class="ns-right">
+        <div class="ns-num-label">Baseline → Target</div>
+        <div class="ns-baseline">~60%<sup style="font-size:10px;">6</sup></div>
+        <div class="ns-arrow">↓</div>
+        <div class="ns-target-num">&lt;15%</div>
+        <div class="ns-target-label">30-day pilot goal</div>
+      </div>
     </div>
 
-    <!-- Primary metrics -->
-    <div class="grid-3" style="margin-top:24px;">
-      <div class="metric-card">
-        <div class="metric-card-label">Primary · Checklist</div>
-        <div class="metric-item">
-          <div class="metric-name">Stage completion rate</div>
-          <div class="metric-desc">% of checklist items marked done before the stage deadline passes.</div>
-          <div class="metric-target">Target: &gt;60% in pilot</div>
+    <!-- Metrics table -->
+    <div class="metrics-table">
+
+      <!-- Checklist -->
+      <div class="mt-col">
+        <div class="mt-col-header">Checklist</div>
+        <div class="mt-row">
+          <div><span class="mt-name">Stage completion</span><span class="mt-hint">items done before deadline</span></div>
+          <div class="mt-target">&gt;60%</div>
         </div>
-        <div class="metric-item">
-          <div class="metric-name">Checklist activation rate</div>
-          <div class="metric-desc">% of post-booking users who open the checklist within 48h.</div>
-          <div class="metric-target">Target: &gt;70%</div>
+        <div class="mt-row">
+          <div><span class="mt-name">Activation rate</span><span class="mt-hint">opens checklist within 48h</span></div>
+          <div class="mt-target">&gt;70%</div>
         </div>
-        <div class="metric-item">
-          <div class="metric-name">Notification-to-action rate</div>
-          <div class="metric-desc">% of push notifications that result in a checklist action within 2h.</div>
-          <div class="metric-target">Target: &gt;40%</div>
+        <div class="mt-row">
+          <div><span class="mt-name">Notification→action</span><span class="mt-hint">acts within 2h of push</span></div>
+          <div class="mt-target">&gt;40%</div>
         </div>
       </div>
 
-      <div class="metric-card">
-        <div class="metric-card-label">Primary · Chat</div>
-        <div class="metric-item">
-          <div class="metric-name">Chat self-resolution rate</div>
-          <div class="metric-desc">% of chat sessions that end without the user clicking "Talk to executive".</div>
-          <div class="metric-target">Target: &gt;85%</div>
+      <!-- Chat -->
+      <div class="mt-col">
+        <div class="mt-col-header">Chat</div>
+        <div class="mt-row">
+          <div><span class="mt-name">Self-resolution rate</span><span class="mt-hint">sessions ending without a human</span></div>
+          <div class="mt-target">&gt;85%</div>
         </div>
-        <div class="metric-item">
-          <div class="metric-name">Executive connect rate</div>
-          <div class="metric-desc">% of sessions where user clicks the executive option. This is our failure metric — lower is better.</div>
-          <div class="metric-target">Target: &lt;15% · Direction: minimize</div>
+        <div class="mt-row">
+          <div><span class="mt-name">Agent connect rate</span><span class="mt-hint">failure metric — minimize</span></div>
+          <div class="mt-target down">&lt;15%</div>
         </div>
-        <div class="metric-item">
-          <div class="metric-name">Avg chat satisfaction</div>
-          <div class="metric-desc">Star rating (0–5) at end of each session.</div>
-          <div class="metric-target">Target: &gt;4.0 stars</div>
+        <div class="mt-row">
+          <div><span class="mt-name">Session satisfaction</span><span class="mt-hint">star rating per session</span></div>
+          <div class="mt-target">&gt;4.0</div>
         </div>
       </div>
 
-      <div class="metric-card">
-        <div class="metric-card-label">Supporting · Business</div>
-        <div class="metric-item">
-          <div class="metric-name">Support ticket deflection</div>
-          <div class="metric-desc">% reduction in inbound support tickets vs pre-platform baseline.</div>
-          <div class="metric-target">Target: &gt;40% reduction</div>
+      <!-- Business -->
+      <div class="mt-col">
+        <div class="mt-col-header">Business</div>
+        <div class="mt-row">
+          <div><span class="mt-name">Ticket deflection</span><span class="mt-hint">vs pre-platform baseline</span></div>
+          <div class="mt-target">&gt;40%↓</div>
         </div>
-        <div class="metric-item">
-          <div class="metric-name">Escalation timing</div>
-          <div class="metric-desc">Avg message # at which users escalate. Earlier escalation = chatbot failing sooner.</div>
-          <div class="metric-target">Watch: if avg &lt; 3rd message, re-evaluate routing</div>
+        <div class="mt-row">
+          <div><span class="mt-name">Escalation timing</span><span class="mt-hint">avg msg# before human request</span></div>
+          <div class="mt-target down">watch</div>
         </div>
-        <div class="metric-item">
-          <div class="metric-name">Post-trip NPS</div>
-          <div class="metric-desc">Net Promoter Score at trip completion — proxy for total experience quality.</div>
-          <div class="metric-target">Target: &gt;50 (vs industry avg ~30<sup class="fnref">6</sup>)</div>
+        <div class="mt-row">
+          <div><span class="mt-name">Post-trip NPS</span><span class="mt-hint">vs industry ~30<sup class="fnref">6</sup></span></div>
+          <div class="mt-target">&gt;50</div>
         </div>
       </div>
+
     </div>
 
     <!-- Pilot evaluation -->
     <div class="pilot-box">
       <div class="pilot-box-title">30-day pilot evaluation criteria</div>
-      <div class="pilot-row">
-        <div class="pilot-num">01</div>
-        <div class="pilot-text"><strong>Checklist adoption</strong> — Did users open and interact with the checklist? What % returned across multiple stages without being pushed?</div>
-      </div>
-      <div class="pilot-row">
-        <div class="pilot-num">02</div>
-        <div class="pilot-text"><strong>Chat usage and depth</strong> — How many sessions per trip? Did users ask substantive questions or test it once and leave?</div>
-      </div>
-      <div class="pilot-row">
-        <div class="pilot-num">03</div>
-        <div class="pilot-text"><strong>Feedback quality</strong> — Are star ratings high (&gt;4.0)? Are low ratings clustered on specific query types that we can retrain or reroute?</div>
-      </div>
-      <div class="pilot-row">
-        <div class="pilot-num">04</div>
-        <div class="pilot-text"><strong>Executive escalation rate</strong> — What % of sessions escalated to a human? At which stage? Did proactive checklist nudges reduce the rate?</div>
+      <div class="pilot-grid">
+        <div class="pilot-row">
+          <div class="pilot-num">01</div>
+          <div class="pilot-text"><strong>Checklist adoption</strong> — Did users return across stages without being nudged?</div>
+        </div>
+        <div class="pilot-row">
+          <div class="pilot-num">02</div>
+          <div class="pilot-text"><strong>Chat depth</strong> — Did users ask real questions, or test it once and leave?</div>
+        </div>
+        <div class="pilot-row">
+          <div class="pilot-num">03</div>
+          <div class="pilot-text"><strong>Rating clusters</strong> — Are low ratings on specific query types we can retrain?</div>
+        </div>
+        <div class="pilot-row">
+          <div class="pilot-num">04</div>
+          <div class="pilot-text"><strong>Escalation rate</strong> — Did proactive checklist nudges lower human contact rate?</div>
+        </div>
       </div>
     </div>
 
